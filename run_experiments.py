@@ -9,7 +9,7 @@ import time
 param_grid = {
     '--database': ["Movies"],
     #,"Violent_Flows","Hockey_Fight"
-    '--epochs': [1],
+    '--epochs': [2],
     '--batch_size': [4],
     '--learningrate': [1e-4],
     #, 1e-3, 1e-2
