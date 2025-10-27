@@ -431,11 +431,11 @@ if __name__ == "__main__":
                 eval_model = model
 
             # 1) 評估模型，得到整體的 loss 和 accuracy
-            test_loss, test_acc = eval_model.evaluate(test_gen, verbose=1)
+            test_loss, test_acc = eval_model.evaluate(test_gen, verbose=2)
 
             # 2) 預測所有測試資料，得到每個樣本屬於各類別的機率
             print("\nGenerating predictions for analysis...")
-            probs = eval_model.predict(test_gen, verbose=1) 
+            probs = eval_model.predict(test_gen, verbose=2) 
 
             # 3) 收集真實標籤和預測結果
             # 從產生器中收集所有真實標籤 (因為 shuffle=False，順序是固定的)
