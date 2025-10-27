@@ -21,13 +21,8 @@ param_grid = {
     #, "fold_2", "fold_3", "fold_4", "fold_5"
     '--sender_email': ["prince111299211@gmail.com"],
     '--receiver_email': ["prince11299211@gmail.com"],
-<<<<<<< HEAD
-    '--password': ["yajwadiglsdczzkf"],
-    '--fold': ["fold_1", "fold_2", "fold_3", "fold_4", "fold_5"]
-=======
+    '--fold': ["fold_1", "fold_2", "fold_3", "fold_4", "fold_5"],
     '--password': ["yajwadiglsdczzkf"]
-
->>>>>>> 62d4847b5c3917c748db306a604e8b0edbe7856b
 }
 
 # ===============================================================
@@ -55,14 +50,6 @@ for i, combo in enumerate(combinations, start=1):
     command = "python Violence_Recognition.py"
     for name, value in zip(param_names, combo):
         command += f" {name} {value}"
-<<<<<<< HEAD
-        
-        # === 修改部分：檢查是否為密碼，若是則不顯示 ===
-        if name == '--password':
-            None
-        else:
-            print(f"  - {name.replace('--', ''):<12}: {value}")
-=======
         # === 修改部分：檢查是否為密碼，若是則不顯示 ===
         if name == '--password':
             None
@@ -71,7 +58,7 @@ for i, combo in enumerate(combinations, start=1):
         else:
             print(f"  - {name.replace('--', ''):<12}: {value}")
 
->>>>>>> 62d4847b5c3917c748db306a604e8b0edbe7856b
+
     print("\n[Executing Command]:")
     print(command)
     print("-" * (52 + len(run_title)))
