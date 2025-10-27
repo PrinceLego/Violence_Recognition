@@ -394,7 +394,7 @@ if __name__ == "__main__":
             # ReduceLROnPlateau (已註解)：如果監控的指標在 N 個 epochs 內沒有改善，就降低學習率
             #tf.keras.callbacks.ReduceLROnPlateau(monitor="val_loss" if val_gen else "loss", factor=0.5, patience=5, min_lr=1e-6, verbose=1),
             # EarlyStopping：如果監控的指標在 N 個 epochs 內沒有改善，就提早停止訓練
-            tf.keras.callbacks.EarlyStopping(monitor="val_loss" if val_gen else "loss", patience=5, restore_best_weights=True, verbose=1),
+            tf.keras.callbacks.EarlyStopping(monitor="val_loss" if val_gen else "loss", patience=10, restore_best_weights=True, verbose=1),
             # CSVLogger：將每個 epoch 的訓練日誌（loss, accuracy等）儲存到 CSV 檔案
             tf.keras.callbacks.CSVLogger(CSV_LOG_PATH)
         ]

@@ -7,21 +7,19 @@ import time
 #               實驗的「總控制台」(Parameter Grid)
 # ===============================================================
 param_grid = {
-    '--database': ["Movies"],
-    #,"Violent_Flows","Hockey_Fight"
-    '--epochs': [2],
+    '--database': ["Movies","Violent_Flows","Hockey_Fight"],
+    #
+    '--epochs': [500],
     '--batch_size': [4],
-    '--learningrate': [1e-4],
+    '--learningrate': [1e-4, 1e-3, 1e-2],
     #, 1e-3, 1e-2
     '--momentum': [0.9],
-    '--num_frames': [16],
+    '--num_frames': [16,12,8],
     '--img_size': [224],
     '--num_classes': [2],
-    '--fold': ["fold_1"],
-    #, "fold_2", "fold_3", "fold_4", "fold_5"
+    '--fold': ["fold_1", "fold_2", "fold_3", "fold_4", "fold_5"],
     '--sender_email': ["prince111299211@gmail.com"],
     '--receiver_email': ["prince11299211@gmail.com"],
-    '--fold': ["fold_1", "fold_2", "fold_3", "fold_4", "fold_5"],
     '--password': ["yajwadiglsdczzkf"]
 }
 
