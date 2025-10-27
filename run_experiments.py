@@ -7,17 +7,22 @@ import time
 #               實驗的「總控制台」(Parameter Grid)
 # ===============================================================
 param_grid = {
-    '--database': ["Movies","Violent_Flows","Hockey_Fight"],
-    '--epochs': [500],
+    '--database': ["Movies"],
+    #,"Violent_Flows","Hockey_Fight"
+    '--epochs': [1],
     '--batch_size': [4],
-    '--learningrate': [1e-4, 1e-3, 1e-2],
+    '--learningrate': [1e-4],
+    #, 1e-3, 1e-2
     '--momentum': [0.9],
-    '--num_frames': [16,12],
+    '--num_frames': [16],
     '--img_size': [224],
     '--num_classes': [2],
+    '--fold': ["fold_1"],
+    #, "fold_2", "fold_3", "fold_4", "fold_5"
     '--sender_email': ["prince111299211@gmail.com"],
     '--receiver_email': ["prince11299211@gmail.com"],
     '--password': ["yajwadiglsdczzkf"]
+
 }
 
 # ===============================================================
@@ -45,7 +50,13 @@ for i, combo in enumerate(combinations, start=1):
     command = "python Violence_Recognition.py"
     for name, value in zip(param_names, combo):
         command += f" {name} {value}"
-        print(f"  - {name.replace('--', ''):<12}: {value}")
+        # === 修改部分：檢查是否為密碼，若是則不顯示 ===
+        if name == '--password':
+            None
+        elif name == '--sender_email' or name == '--receiver_email':
+            print(f"  - {name.replace('--', ''):<12}: {value}")
+        else:
+            print(f"  - {name.replace('--', ''):<12}: {value}")
 
     print("\n[Executing Command]:")
     print(command)
