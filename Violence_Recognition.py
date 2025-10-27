@@ -44,6 +44,9 @@ parser.add_argument('--img_size', type=int)
 parser.add_argument('--num_classes', type=int)
 # 定義 --fold 參數，型別為字串，用於指定交叉驗證的特定資料夾（例如 'fold1'）
 parser.add_argument('--fold', type=str)
+parser.add_argument('--sender_email', type=str)
+parser.add_argument('--receiver_email', type=str)
+parser.add_argument('--password', type=str)
 
 # 解析從命令列傳入的所有參數
 args = parser.parse_args()
@@ -59,6 +62,12 @@ NUM_FRAMES = args.num_frames  # 每個影片的幀數
 IMG_SIZE = args.img_size  # 影像尺寸
 NUM_CLASSES = args.num_classes  # 分類數量
 FOLD = args.fold  # 交叉驗證的折數
+
+
+SENDER_EMAIL = args.sender_email  # 交叉驗證的折數
+RECEIVER_EMAIL = args.receiver_email  # 交叉驗證的折數
+PASSWORD = args.password
+
 
 # 設定資料集的根目錄
 BASE = Path("C:/program1/Database")
@@ -218,11 +227,25 @@ class VideoFrameSequence(tf.keras.utils.Sequence):
             for fid in idxs:
                 img = cv2.imread(frames[fid]) # 讀取圖片檔案
                 
-                # 影像預處理
+                # === 新增：錯誤處理 ===
+                # 檢查 img 是否為 None (讀取失敗)
+                if img is None:
+                    # 如果 imgs 列表不是空的，就複製最後一張成功讀取的圖片
+                    if len(imgs) > 0:
+                        print(f"Warning: Failed to read frame {frames[fid]}. Replicating last frame.")
+                        imgs.append(imgs[-1].copy())
+                    # 如果連第一張都讀取失敗，這是一個嚴重的資料問題，可以選擇跳過或報錯
+                    else:
+                        print(f"Error: Failed to read the very first frame of {folder}. Skipping this video.")
+                        # 這裡我們選擇跳過這個影片，需要確保 batch 不會因此變空
+                        # 為了簡化，我們先用一個黑色畫面代替
+                        imgs.append(np.zeros((self.img_size, self.img_size, 3), dtype=np.float32))
+                    continue # 進入下一次迴圈
+
+                # 如果讀取成功，才進行後續處理
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB) # 將顏色從 BGR (OpenCV預設) 轉為 RGB
                 img = cv2.resize(img, (self.img_size, self.img_size)) # 縮放到指定的尺寸
-                imgs.append(img.astype("float32") / 255.0) # 將像素值從 0-255 標準化到 0.0-1.0
-            
+                imgs.append(img.astype("float32") / 255.0) # 將像素值從 0-255 標準化到 0.0-1.0           
             # 如果因為某些原因（例如影片太短）幀數仍然不夠，就用最後一幀來補足
             while len(imgs) < self.num_frames:
                 imgs.append(imgs[-1].copy())
@@ -412,7 +435,7 @@ if __name__ == "__main__":
 
             # 2) 預測所有測試資料，得到每個樣本屬於各類別的機率
             print("\nGenerating predictions for analysis...")
-            probs = eval_model.predict(test_gen, verbose=1)
+            probs = eval_model.predict(test_gen, verbose=1) 
 
             # 3) 收集真實標籤和預測結果
             # 從產生器中收集所有真實標籤 (因為 shuffle=False，順序是固定的)
@@ -457,7 +480,7 @@ if __name__ == "__main__":
             print(f"\n Test Loss: {test_loss:.4f}")
             print(f" Test Accuracy: {test_acc * 100:.2f}%")
         else:
-            print("⚠️ No test set found or empty test set; skipping evaluation.")
+            print("No test set found or empty test set; skipping evaluation.")
 
         # ============================
         # Write summary.txt (寫入總結報告)
@@ -543,13 +566,12 @@ if __name__ == "__main__":
         print(f"Confusion Matrix saved to: {CM_PNG}")
         print(f"Total runtime: {total_time:.2f} sec\n")
 
+
+
         # ============================
         # Email Notification (Email 通知)
         # ============================
-        sender_email = "prince111299211@gmail.com"
-        receiver_email = "prince11299211@gmail.com"
-        # !! 安全性警告：直接在程式碼中寫入密碼是非常不安全的做法 !!
-        password = "yajwadiglsdczzkf"
+
         subject = "程式已完成通知"
 
         # --- 準備郵件內容 ---
@@ -589,13 +611,13 @@ if __name__ == "__main__":
         # 建立郵件物件
         msg = MIMEText(body)
         msg['Subject'] = subject
-        msg['From'] = sender_email
-        msg['To'] = receiver_email
+        msg['From'] = SENDER_EMAIL
+        msg['To'] = RECEIVER_EMAIL
 
         # 使用 smtplib 的 SSL 連線到 Gmail 的 SMTP 伺服器
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-            server.login(sender_email, password) # 登入
-            server.sendmail(sender_email, receiver_email, msg.as_string()) # 發送郵件
+            server.login(SENDER_EMAIL, PASSWORD) # 登入
+            server.sendmail(SENDER_EMAIL, RECEIVER_EMAIL, msg.as_string()) # 發送郵件
 
         print("Email 已發送！")
 

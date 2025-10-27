@@ -15,7 +15,9 @@ param_grid = {
     '--num_frames': [16,12],
     '--img_size': [224],
     '--num_classes': [2],
-    '--fold': ["fold_1", "fold_2", "fold_3", "fold_4", "fold_5"]
+    '--sender_email': ["prince111299211@gmail.com"],
+    '--receiver_email': ["prince11299211@gmail.com"],
+    '--password': ["yajwadiglsdczzkf"]
 }
 
 # ===============================================================
